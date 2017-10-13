@@ -1,0 +1,61 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: inventory
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: inventory-service
+        target_service: inventory-service
+        targetService: inventory-service
+        app: inventory
+    spec:
+      containers:
+      - name: inventory-svc
+        image: {{ .Values.image }}
+        ports:
+          - containerPort: 8080
+{{ if .Values.useProxy }}
+      - name: kibbegcpnextproxy
+        command:
+        - /usr/local/bin/envoy
+        - -l
+        - debug
+        - -c
+        - /etc/envoy/envoy-esp.conf
+        env:
+        - name: target_service
+          value: inventory
+        - name: TARGET_SERVICE
+          value: inventory
+        - name: targetService
+          value: inventory
+        image: gcr.io/istio-testing/proxy:gcpnext
+        ports:
+        - containerPort: 9090
+          name: kibbegcpnextproxyport
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /downward
+          name: downwardapi
+        - mountPath: /etc/envoy
+          name: envoy-config
+          readOnly: true
+      volumes:
+      - configMap:
+          name: inventory-proxy-configmap-ingress
+        name: envoy-config
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.labels
+            path: labels
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.annotations
+            path: annotations
+        name: downwardapi
+{{ end }}

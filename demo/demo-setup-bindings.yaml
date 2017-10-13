@@ -1,0 +1,29 @@
+apiVersion: catalog.k8s.io/v1alpha1
+kind: ServiceBinding
+metadata:
+  name: purchases-users
+name: purchases-users
+spec:
+  instanceRef:
+    name: users
+    namespace: default
+---
+apiVersion: catalog.k8s.io/v1alpha1
+kind: ServiceBinding
+metadata:
+  name: purchases-inventory
+name: purchases-inventory
+spec:
+  instanceRef:
+    name: inventory
+    namespace: default
+---
+apiVersion: catalog.k8s.io/v1alpha1
+kind: ServiceBinding
+metadata:
+  name: purchases-payments
+name: purchases-payments
+spec:
+  instanceRef:
+    name: payments
+    namespace: default

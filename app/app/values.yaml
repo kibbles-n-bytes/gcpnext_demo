@@ -1,0 +1,4 @@
+image: gcr.io/kibbegcpnext-demo/booksfe
+version: gcpnext
+useProxy: true
+usePubsub: false

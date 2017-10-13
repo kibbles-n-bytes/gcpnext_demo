@@ -1,0 +1,104 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: booksfe
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: booksfe-service
+        target_service: booksfe-service
+        targetService: booksfe-service
+        app: booksfe
+    spec:
+      containers:
+      - name: booksfe-svc
+        image: {{ .Values.image }}:{{ .Values.version | default "gcpnext" }}
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+        env:
+          # User service information from binding.
+          - name: SVC_USERS_HOST
+            valueFrom:
+              secretKeyRef:
+                name: booksfe-users
+                key: hostname
+          - name: SVC_USERS_PORT
+            valueFrom:
+              secretKeyRef:
+                name: booksfe-users
+                key: port
+          # Bookstore service information from binding.
+          - name: SVC_BOOKS_HOST
+            valueFrom:
+              secretKeyRef:
+                name: booksfe-inventory
+                key: hostname
+          - name: SVC_BOOKS_PORT
+            valueFrom:
+              secretKeyRef:
+                name: booksfe-inventory
+                key: port
+          # Purchases service information from binding.
+          - name: SVC_PURCHASES_HOST
+            valueFrom:
+              secretKeyRef:
+                name: booksfe-purchases
+                key: hostname
+          - name: SVC_PURCHASES_PORT
+            valueFrom:
+              secretKeyRef:
+                name: booksfe-purchases
+                key: port
+{{ if .Values.usePubsub }}
+          - name: PUBSUB_KEY_DATA
+            valueFrom:
+              secretKeyRef:
+                name: booksfe-pubsub
+                key: PrivateKeyData
+{{ end }}
+{{ if .Values.useProxy }}
+      - name: kibbegcpnextproxy
+        command:
+        - /usr/local/bin/envoy
+        - -l
+        - info
+        - -c
+        - /etc/envoy/envoy-esp.conf
+        env:
+        - name: target_service
+          value: booksfe
+        - name: TARGET_SERVICE
+          value: booksfe
+        - name: targetService
+          value: booksfe
+        image: gcr.io/istio-testing/proxy:gcpnext
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9090
+          name: kibbegcpnextproxyport
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /downward
+          name: downwardapi
+        - mountPath: /etc/envoy
+          name: envoy-config
+          readOnly: true
+      volumes:
+      - configMap:
+          name: booksfe-proxy-configmap-ingress
+        name: envoy-config
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.labels
+            path: labels
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.annotations
+            path: annotations
+        name: downwardapi
+{{ end }}

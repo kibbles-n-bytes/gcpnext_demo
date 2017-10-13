@@ -1,0 +1,10 @@
+apiVersion: catalog.k8s.io/v1alpha1
+kind: ServiceInstance
+metadata:
+  name: users
+name: users
+spec:
+  serviceClassName: users
+  planName: default
+  parameters:
+    useProxy: true
