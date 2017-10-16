@@ -68,7 +68,6 @@ metadata:
   name: registry
   namespace: k8s-broker
 spec:
-  type: LoadBalancer
   selector:
     app: registry
   ports:
