@@ -10,6 +10,7 @@
     {
       "name": "default",
       "id": "D069A509-878E-412C-AAAD-57ED0F7B927A",
+      "description": "Default plan for users",
       "metadata": {
         "instanceType": "gs://helm-sb-test/users-0.0.9.tgz"
       }

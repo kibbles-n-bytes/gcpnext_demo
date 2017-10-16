@@ -10,6 +10,7 @@
     {
       "name": "default",
       "id": "B9373540-D108-4559-B7D4-C9CF18B45C3D",
+      "description": "Default plan for purchases",
       "metadata": {
         "instanceType": "gs://helm-sb-test/purchases-0.0.8.tgz"
       }
