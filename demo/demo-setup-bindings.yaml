@@ -1,5 +1,5 @@
 apiVersion: servicecatalog.k8s.io/v1alpha1
-kind: ServiceBinding
+kind: ServiceInstanceCredential
 metadata:
   name: purchases-users
 name: purchases-users
@@ -9,7 +9,7 @@ spec:
     namespace: default
 ---
 apiVersion: servicecatalog.k8s.io/v1alpha1
-kind: ServiceBinding
+kind: ServiceInstanceCredential
 metadata:
   name: purchases-inventory
 name: purchases-inventory
@@ -19,7 +19,7 @@ spec:
     namespace: default
 ---
 apiVersion: servicecatalog.k8s.io/v1alpha1
-kind: ServiceBinding
+kind: ServiceInstanceCredential
 metadata:
   name: purchases-payments
 name: purchases-payments
