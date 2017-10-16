@@ -1,3 +1,3 @@
-image: gcr.io/plori-demo/booksfe
-version: gcpnext
+image: gcr.io/sc-bookstore-demo/app
+version: latest
 usePubsub: false

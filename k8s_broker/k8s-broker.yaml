@@ -20,7 +20,7 @@ spec:
       serviceAccountName: "k8s-broker"
       containers:
       - name: helm-broker
-        image: gcr.io/kibbe-plori/catalog/helm-broker:bind #TODO: change to permanent file
+        image: gcr.io/sc-bookstore-demo/helm-broker:latest
         imagePullPolicy: Always
         args:
         - --registry_host
@@ -57,7 +57,7 @@ spec:
       serviceAccountName: "k8s-broker"
       containers:
       - name: registry
-        image: gcr.io/kibbe-plori/catalog/registry:bind #TODO: change to permanent file
+        image: gcr.io/sc-bookstore-demo/registry:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8001
