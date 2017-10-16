@@ -1,4 +1,4 @@
-# USERS
+# APP -> USERS
 apiVersion: servicecatalog.k8s.io/v1alpha1
 kind: ServiceInstanceCredential
 metadata:
@@ -9,7 +9,7 @@ spec:
     name: users
     namespace: default
 ---
-# INVENTORY
+# APP -> INVENTORY
 apiVersion: servicecatalog.k8s.io/v1alpha1
 kind: ServiceInstanceCredential
 metadata:
@@ -20,7 +20,7 @@ spec:
     name: inventory
     namespace: default
 ---
-# PURCHASES
+# APP -> PURCHASES
 apiVersion: servicecatalog.k8s.io/v1alpha1
 kind: ServiceInstanceCredential
 metadata:
