@@ -1,8 +1,15 @@
+# NAMESPACE
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: k8s-broker
+---
 # HELM BROKER
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: helm-broker
+  namespace: k8s-broker
 spec:
   replicas: 1
   template:
@@ -13,11 +20,11 @@ spec:
       serviceAccountName: "k8s-broker"
       containers:
       - name: helm-broker
-        image: gcr.io/kibbe-gcpnext/catalog/helm-broker:latest
+        image: gcr.io/kibbe-plori/catalog/helm-broker:bind #TODO: change to permanent file
         imagePullPolicy: Always
         args:
         - --registry_host
-        - registry
+        - "registry.k8s-broker.svc.cluster.local"
         ports:
         - containerPort: 8000
 ---
@@ -25,6 +32,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: helm-broker
+  namespace: k8s-broker
 spec:
   selector:
     app: helm-broker
@@ -38,6 +46,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: registry
+  namespace: k8s-broker
 spec:
   replicas: 1
   template:
@@ -48,7 +57,7 @@ spec:
       serviceAccountName: "k8s-broker"
       containers:
       - name: registry
-        image: gcr.io/kibbe-plori/catalog/registry:bind
+        image: gcr.io/kibbe-plori/catalog/registry:bind #TODO: change to permanent file
         imagePullPolicy: Always
         ports:
         - containerPort: 8001
@@ -57,6 +66,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: registry
+  namespace: k8s-broker
 spec:
   type: LoadBalancer
   selector:
@@ -71,13 +81,14 @@ kind: ServiceAccount
 apiVersion: v1
 metadata:
   name: "k8s-broker"
-  namespace: "default"
+  namespace: "k8s-broker"
 ---
 ## CLUSTER ROLE BINDING
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: "k8s-broker"
+  namespace: "k8s-broker"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -85,4 +96,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: "k8s-broker"
-  namespace: "default"
+  namespace: "k8s-broker"

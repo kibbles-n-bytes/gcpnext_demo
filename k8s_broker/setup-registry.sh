@@ -8,7 +8,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 echo "Setting up registry..."
 
-REGISTRY_HOST="$(KUBECONFIG="${KUBECONFIG}" kubectl get services -n "${BROKER_NAMESPACE}" | grep 'registry' | awk '{print $3}')"
+REGISTRY_HOST="$(KUBECONFIG="${KUBECONFIG}" kubectl get services -n k8s-broker | grep 'registry' | awk '{print $3}')"
 
 [[ "${REGISTRY_HOST}" =~ ^[0-9.]+$ ]] \
   || error_exit 'Error when fetching registry IP address.'

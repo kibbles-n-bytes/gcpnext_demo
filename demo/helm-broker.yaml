@@ -3,4 +3,4 @@ kind: ServiceBroker
 metadata:
   name: helm-broker
 spec:
-  url: http://helm-broker.default.svc.cluster.local:8000
+  url: http://helm-broker.k8s-broker.svc.cluster.local:8000
