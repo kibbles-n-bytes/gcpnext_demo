@@ -133,7 +133,8 @@ function server(options) {
   });
   app.get('/purchases/:purchase', getHelper(params => '/purchases/' + params.purchase, options.purchases));
 
-  app.use(express.static('dist'));
+  // TODO(mkibbe): Re-enable once front-end Angular files build properly again.
+  // app.use(express.static('dist'));
 
   return app
 }
