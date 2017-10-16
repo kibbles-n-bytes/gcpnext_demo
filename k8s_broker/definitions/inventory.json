@@ -12,7 +12,7 @@
       "id": "CC1E6D95-A54B-410E-92F5-293E0EEF5F3E",
       "description": "Default plan for inventory",
       "metadata": {
-        "instanceType": "gs://helm-sb-test/bookstore-0.0.9.tgz"
+        "instanceType": "gs://helm-sb-test/bookstore-0.0.10.tgz"
       }
     }
   ],
