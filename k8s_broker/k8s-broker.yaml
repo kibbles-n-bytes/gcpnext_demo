@@ -1,0 +1,88 @@
+# HELM BROKER
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: helm-broker
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: helm-broker
+    spec:
+      serviceAccountName: "k8s-broker"
+      containers:
+      - name: helm-broker
+        image: gcr.io/kibbe-gcpnext/catalog/helm-broker:latest
+        imagePullPolicy: Always
+        args:
+        - --registry_host
+        - registry
+        ports:
+        - containerPort: 8000
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: helm-broker
+spec:
+  selector:
+    app: helm-broker
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+---
+# REGISTRY
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: registry
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      serviceAccountName: "k8s-broker"
+      containers:
+      - name: registry
+        image: gcr.io/kibbe-plori/catalog/registry:bind
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8001
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: registry
+spec:
+  type: LoadBalancer
+  selector:
+    app: registry
+  ports:
+  - protocol: TCP
+    port: 8001
+    targetPort: 8001
+---
+## SERVICE ACCOUNT
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: "k8s-broker"
+  namespace: "default"
+---
+## CLUSTER ROLE BINDING
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: "k8s-broker"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: "cluster-admin"
+subjects:
+- kind: ServiceAccount
+  name: "k8s-broker"
+  namespace: "default"
