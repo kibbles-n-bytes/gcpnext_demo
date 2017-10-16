@@ -3,6 +3,6 @@ kind: ServiceInstance
 metadata:
   name: inventory
 name: inventory
-spec: 
+spec:
   serviceClassName: inventory
   planName: default

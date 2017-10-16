@@ -6,19 +6,15 @@ name: users
 spec:
   serviceClassName: users
   planName: default
-  parameters:
-    useProxy: true
 ---
 apiVersion: servicecatalog.k8s.io/v1alpha1
 kind: ServiceInstance
 metadata:
   name: inventory
 name: inventory
-spec: 
+spec:
   serviceClassName: inventory
   planName: default
-  parameters:
-    useProxy: true
 ---
 apiVersion: servicecatalog.k8s.io/v1alpha1
 kind: ServiceInstance
@@ -28,8 +24,6 @@ name: purchases
 spec:
   serviceClassName: purchases
   planName: default
-  parameters:
-    useProxy: true
 ---
 apiVersion: servicecatalog.k8s.io/v1alpha1
 kind: ServiceInstance
