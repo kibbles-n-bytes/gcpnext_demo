@@ -1,0 +1,19 @@
+{
+  "name": "users",
+  "id": "D151BEB2-B9EA-4B90-B690-3550E6FADD0B",
+  "description": "Users service for bookstore",
+  "metadata": {
+      "longDescription": "Users service for bookstore",
+      "providerDisplayName": "Users Team"
+  },
+  "plans": [
+    {
+      "name": "default",
+      "id": "D069A509-878E-412C-AAAD-57ED0F7B927A",
+      "metadata": {
+        "instanceType": "gs://helm-sb-test/users-0.0.9.tgz"
+      }
+    }
+  ],
+  "bindable": true
+}
