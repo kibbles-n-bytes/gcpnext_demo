@@ -1,4 +1,3 @@
-image: gcr.io/kibbegcpnext-demo/booksfe
+image: gcr.io/plori-demo/booksfe
 version: gcpnext
-useProxy: true
 usePubsub: false
