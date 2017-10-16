@@ -1,5 +1,5 @@
 # Binding
-apiVersion: catalog.k8s.io/v1alpha1
+apiVersion: servicecatalog.k8s.io/v1alpha1
 kind: ServiceBinding
 metadata:
   name: booksfe-pubsub

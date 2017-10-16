@@ -1,4 +1,4 @@
-apiVersion: catalog.k8s.io/v1alpha1
+apiVersion: servicecatalog.k8s.io/v1alpha1
 kind: ServiceInstance
 metadata:
   name: users
@@ -9,7 +9,7 @@ spec:
   parameters:
     useProxy: true
 ---
-apiVersion: catalog.k8s.io/v1alpha1
+apiVersion: servicecatalog.k8s.io/v1alpha1
 kind: ServiceInstance
 metadata:
   name: inventory
@@ -20,7 +20,7 @@ spec:
   parameters:
     useProxy: true
 ---
-apiVersion: catalog.k8s.io/v1alpha1
+apiVersion: servicecatalog.k8s.io/v1alpha1
 kind: ServiceInstance
 metadata:
   name: purchases
@@ -31,7 +31,7 @@ spec:
   parameters:
     useProxy: true
 ---
-apiVersion: catalog.k8s.io/v1alpha1
+apiVersion: servicecatalog.k8s.io/v1alpha1
 kind: ServiceInstance
 metadata:
   name: payments
