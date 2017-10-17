@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: booksfe-svc
-        image: {{ .Values.image }}:{{ .Values.version | default "gcpnext" }}
+        image: {{ .Values.image }}:{{ .Values.version | default "latest" }}
         imagePullPolicy: Always
         ports:
           - containerPort: 8080
