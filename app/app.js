@@ -3,7 +3,9 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var request = require('request');
 var atob = require('atob');
-var gcloud = require('google-cloud')
+var gcloud = require('@google-cloud/pubsub')();
+
+console.log(gcloud);
 
 var TIMEOUT = 1500;
 request.debug = true;
