@@ -1,84 +1,133 @@
-# Running the demo
+# Service Catalog and GCP Broker Demo
 
-## Deploy the service catalog
+## Prereqs
+
+- Installed and in your PATH:
+  - [Helm](https://github.com/kubernetes/helm)
+  - `gcloud`
+  - `kubectl`
+
+- You are logged in with `gcloud`. If not, run the following and follow the
+  instructions:
+  ```
+  gcloud auth login
+  ```
+
+- Your default `gcloud` project is set to the project you intend to use for this
+demo. To do so, run the following:
+  ```
+  gcloud config set project ${YOUR-PROJECT-HERE}
+  ```
+
+## Deploy the Service Catalog and GCP Broker
+
+To install the Service Catalog in your cluster and connect with the GCP Broker,
+you should follow the instructions in the
+GoogleCloudPlatform/k8s-service-catalog project
+[here](https://github.com/GoogleCloudPlatform/k8s-service-catalog).
+
+## K8S Broker
+
+This project uses a custom build of the
+[Helm Broker](https://github.com/google/helm-broker) to install demo-specific
+service instances in your cluster.
+
+Create the actual broker resources in Kubernetes:
 
 ```
-export REGISTRY=gcr.io/kibbegcpnext-demo
-export VERSION=gcpnext
-
-helm install \
-    --set "registry=${REGISTRY},version=${VERSION}" \
-    --namespace catalog \
-    ../deploy/catalog
+kubectl create -f k8s_broker/k8s-broker.yaml
 ```
 
-## Add gcp broker
-
-```
-kubectl create -f demo/gcp-broker.yaml
-```
-
-## Add k8s broker
+Connect the K8S Broker to the Service Catalog:
 
 ```
 kubectl create -f demo/k8s-broker.yaml
 ```
 
-## Create user service
+## Creating Instances and Bindings
+
+Create the instances and bindings used in the demo:
 
 ```
-kubectl create -f demo/users-instance.yaml
-kubectl create -f demo/users-bindings.yaml
+kubectl create -f demo/demo-setup-instances.yaml
+kubectl create -f demo-setup-purchases-bindings.yaml
+kubectl create -f demo-setup-app-bindings.yaml
 ```
 
-## Create inventory service
+## Installing the app
+
+Install the main "Books! Books! Books!" web app:
 
 ```
-kubectl create -f demo/inventory-instance.yaml
-kubectl create -f demo/inventory-bindings.yaml
+helm install app/app --name app
 ```
 
-## Deploy purchase service
+Access the app:
 
-This is service will consume both user and bookstore bindings.
-
+1) Find the external IP for the app
 ```
-kubectl create -f demo/purchases-instance.yaml
-kubectl create -f demo/purchases-binding.yaml
-```
-
-## Deploy PubSub service
-```
-kubectl create -f demo/pubsub-instance.yaml
-kubectl create -f demo/pubsub-binding.yaml
+kubectl get services booksfe
+APP_IP=XXX.XXX.XX.XX # Use the IP listed under the EXTERNAL-IP column
 ```
 
-## Deploy app
+2) Visit the app in your browser at: http://${APP_IP}:8080/
+
+You should see a list of eight books with a button that says "Purchase" beside
+each. If you click "Purchase", that book will be added to your list of
+Purchases, which you can view by clicking the tab at the top.
+
+## Connecting the demo app with Google Cloud Pub/Sub
+Now we're going to connect this app to Google Cloud Pub/Sub to see when
+purchases are made. In this new version, when you buy a book, the app
+will publish a message to the topic created by the binding. It will also
+create a subscription for convenience called "sc-bookstore-demo", should it
+not already exist.
+
+### Prereqs:
+To connect your application to Pub/Sub, you should create a service account
+named "sc-bookstore-demo" in your GCP project. To easily do this, run the
+following command:
 
 ```
-helm install --set "version=${VERSION}" app/app
+gcloud iam service-accounts create sc-bookstore-demo --display-name "Service account for Service Catalog Bookstore demo"
 ```
 
-## Make a purchase
-
-Get the app public IP.
-
-```
-kubectl get services app
-export IP=<IP>
-```
-
-Make a purchase.
+In order for your application to use the service account you created, you will
+need to create a secret containing a key to that service account. To do so
+easily, run the following script:
 
 ```
-curl -H "Content-Type: application/json" \
-    -X POST \
-    -d '{"user": "/users/1", "book": "/shelves/1/books/2"}' \
-    ${IP}:8080/purchases
+./scripts/setup-service-account-key.sh
 ```
 
-Check on your purchase.
+### Installation:
+Create the Pub/Sub instance:
+```
+kubectl create -f demo/gcp-pubsub-instance.yaml
+```
+
+Next, edit the Pub/Sub binding YAML file to point to the service account you
+created for this demo. You should replace "${YOUR-PROJECT-HERE}" with your
+project's ID (name, not number).
+
+Create the Pub/Sub binding:
+```
+kubectl create -f demo/gcp-pubsub-binding.yaml
+```
+
+
+Now, redeploy the application, this time telling it to use Pub/Sub:
 
 ```
-curl ${IP}:8080/purchases
+helm upgrade app app/app --set "usePubsub=true"
+```
+
+### Using the app
+
+To view messages published by the app, you can run the following command to pull
+the latest message from the message queue (you may have to run it a few times
+before it sees the message):
+
+```
+gcloud beta pubsub subscriptions pull sc-bookstore-demo --auto-ack
 ```
