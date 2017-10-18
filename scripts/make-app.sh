@@ -2,5 +2,5 @@
 
 set -e
 
-docker build . -t "gcr.io/sc-bookstore-demo/app:test"
+docker build ../app -t "gcr.io/sc-bookstore-demo/app:test"
 gcloud docker -- push "gcr.io/sc-bookstore-demo/app:test"
