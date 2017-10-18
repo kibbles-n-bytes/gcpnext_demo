@@ -1,0 +1,9 @@
+# PUBSUB INSTANCE
+apiVersion: servicecatalog.k8s.io/v1alpha1
+kind: ServiceInstance
+metadata:
+  name: gcp-pubsub-instance
+spec:
+  serviceClassName: pubsub
+  servicePlanName: pubsub-plan
+
