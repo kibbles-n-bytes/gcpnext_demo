@@ -3,25 +3,28 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var request = require('request');
 var atob = require('atob');
-var gcloud = require('@google-cloud/pubsub')();
 
-console.log(gcloud);
+var callback = function(err, subscription, apiResponse) {
+  console.log("err: "+err);
+  console.log("subscription: "+subscription);
+  console.log("apiResponse: "+apiResponse);
+};
 
 var TIMEOUT = 1500;
 request.debug = true;
 
-if(process.env.PUBSUB_KEY_DATA) {
-  var gcpCredentials = JSON.parse(atob(process.env.PUBSUB_KEY_DATA));
-  var pubsub = gcloud.pubsub({ credentials: gcpCredentials });
+var usePubsub = false;
+if(process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+  usePubsub = true;
+  var pubsub = require('@google-cloud/pubsub')();
 
-  var topic = pubsub.topic('gcpnext');
-  var subscription = topic.subscription('gcpnext');
+  var topic = pubsub.topic(process.env.PUBSUB_TOPIC);
+  var publisher = topic.publisher();
+  var subscription = topic.subscription('sc-bookstore-demo');
 
-  var deleteSubscription = subscription.exists().then(
+  var deleteSubscriptionPromise = subscription.exists().then(
       b => b[0] ? subscription.delete() : Promise.resolve(),
       console.log);
-} else {
-  var gcpCredentials = null;
 }
 
 function server(options) {
@@ -95,13 +98,12 @@ function server(options) {
   }
 
   function publishMessage(msg) {
-    if(gcpCredentials) {
-      console.log("publishing message: " + msg);
-      deleteSubscription.then(createTopicMaybe, console.log)
-          .then(createSubscriptionMaybe, console.log)
-          .then(_ => topic.publish({ data: msg}), console.log)
-          .then(console.log, console.log);
-    }
+    console.log("publishing message: " + msg);
+    var buffer = new Buffer(msg);
+    deleteSubscriptionPromise.then(createTopicMaybe, console.log)
+        .then(createSubscriptionMaybe, console.log)
+        .then(_ => publisher.publish(buffer), console.log)
+        .then(console.log, console.log);
   }
 
   function rq(opts, callback) {
@@ -131,7 +133,9 @@ function server(options) {
   app.get('/purchases', getHelper(_ => '/purchases', options.purchases));
   app.post('/purchases', function(req, res) {
       postHelper(_ => '/purchases', options.purchases)(req, res);
-      publishMessage("purchase made");
+      if(usePubsub) {
+        publishMessage("purchase made");
+      }
   });
   app.get('/purchases/:purchase', getHelper(params => '/purchases/' + params.purchase, options.purchases));
 
