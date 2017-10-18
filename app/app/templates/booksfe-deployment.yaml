@@ -16,7 +16,7 @@ spec:
       volumes:
       - name: google-cloud-key
         secret:
-          secretName: pubsub-key
+          secretName: gcp-service-account-key
 {{ end }}
       containers:
       - name: booksfe-svc
