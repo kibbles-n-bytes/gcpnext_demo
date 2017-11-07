@@ -50,8 +50,8 @@ Create the instances and bindings used in the demo:
 
 ```
 kubectl create -f demo/demo-setup-instances.yaml
-kubectl create -f demo-setup-purchases-bindings.yaml
-kubectl create -f demo-setup-app-bindings.yaml
+kubectl create -f demo/demo-setup-purchases-bindings.yaml
+kubectl create -f demo/demo-setup-app-bindings.yaml
 ```
 
 ## Installing the app
