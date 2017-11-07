@@ -1,6 +1,6 @@
 {
   "name": "purchases",
-  "id": "1B380F2D-0DB9-4ADC-B15F-257B3CAED23A",
+  "id": "1b380f2d-0db9-4adc-b15f-257b3caed23a",
   "description": "Purchases service for bookstore",
   "metadata": {
       "longDescription": "Purchases service for bookstore",
@@ -9,7 +9,7 @@
   "plans": [
     {
       "name": "default",
-      "id": "B9373540-D108-4559-B7D4-C9CF18B45C3D",
+      "id": "b9373540-d108-4559-b7d4-c9cf18b45c3d",
       "description": "Default plan for purchases",
       "metadata": {
         "instanceType": "gs://helm-sb-test/purchases-0.0.8.tgz"

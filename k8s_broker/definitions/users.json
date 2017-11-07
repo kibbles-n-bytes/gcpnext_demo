@@ -1,6 +1,6 @@
 {
   "name": "users",
-  "id": "D151BEB2-B9EA-4B90-B690-3550E6FADD0B",
+  "id": "d151beb2-b9ea-4b90-b690-3550e6fadd0b",
   "description": "Users service for bookstore",
   "metadata": {
       "longDescription": "Users service for bookstore",
@@ -9,7 +9,7 @@
   "plans": [
     {
       "name": "default",
-      "id": "D069A509-878E-412C-AAAD-57ED0F7B927A",
+      "id": "d069a509-878e-412c-aaad-57ed0f7b927a",
       "description": "Default plan for users",
       "metadata": {
         "instanceType": "gs://helm-sb-test/users-0.0.9.tgz"
