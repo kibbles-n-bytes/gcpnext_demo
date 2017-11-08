@@ -16,7 +16,7 @@ spec:
       volumes:
       - name: google-cloud-key
         secret:
-          secretName: gcp-service-account-key
+          secretName: gcp-iam-credentials
 {{ end }}
       containers:
       - name: booksfe-svc
@@ -65,7 +65,7 @@ spec:
                 key: port
 {{ if .Values.usePubsub }}
           - name: GOOGLE_APPLICATION_CREDENTIALS
-            value: /var/secrets/google/key.json
+            value: /var/secrets/google/serviceAccountPrivateKey
           - name: PUBSUB_PROJECT
             valueFrom:
               secretKeyRef:
