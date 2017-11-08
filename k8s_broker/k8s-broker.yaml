@@ -20,7 +20,7 @@ spec:
       serviceAccountName: "k8s-broker"
       containers:
       - name: helm-broker
-        image: gcr.io/sc-bookstore-demo/helm-broker:latest
+        image: gcr.io/sc-bookstore-demo/helm-broker:demo
         imagePullPolicy: Always
         args:
         - --registry_host
@@ -57,7 +57,7 @@ spec:
       serviceAccountName: "k8s-broker"
       containers:
       - name: registry
-        image: gcr.io/sc-bookstore-demo/registry:latest
+        image: gcr.io/sc-bookstore-demo/registry:demo
         imagePullPolicy: Always
         ports:
         - containerPort: 8001
