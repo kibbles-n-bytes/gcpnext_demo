@@ -66,16 +66,6 @@ spec:
 {{ if .Values.usePubsub }}
           - name: GOOGLE_APPLICATION_CREDENTIALS
             value: /var/secrets/google/serviceAccountPrivateKey
-          - name: PUBSUB_PROJECT
-            valueFrom:
-              secretKeyRef:
-                name: gcp-pubsub-credentials
-                key: project
-          - name: PUBSUB_SERVICE_ACCOUNT
-            valueFrom:
-              secretKeyRef:
-                name: gcp-pubsub-credentials
-                key: serviceAccount
           - name: PUBSUB_TOPIC
             valueFrom:
               secretKeyRef:

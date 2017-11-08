@@ -20,11 +20,13 @@ if(process.env.GOOGLE_APPLICATION_CREDENTIALS) {
 
   var topic = pubsub.topic(process.env.PUBSUB_TOPIC);
   var publisher = topic.publisher();
+  /*
   var subscription = topic.subscription('sc-bookstore-demo');
 
   var deleteSubscriptionPromise = subscription.exists().then(
       b => b[0] ? subscription.delete() : Promise.resolve(),
       console.log);
+  */
 }
 
 function server(options) {
@@ -59,9 +61,11 @@ function server(options) {
     });
   }
 
+/*
   function createSubscriptionMaybe() {
     return createMaybe(subscription, "subscription");
   }
+*/
 
   function createTopicMaybe() {
     return createMaybe(topic, "topic");
@@ -100,10 +104,13 @@ function server(options) {
   function publishMessage(msg) {
     console.log("publishing message: " + msg);
     var buffer = new Buffer(msg);
+    /*
     deleteSubscriptionPromise.then(createTopicMaybe, console.log)
         .then(createSubscriptionMaybe, console.log)
         .then(_ => publisher.publish(buffer), console.log)
         .then(console.log, console.log);
+    */
+    publisher.publish(buffer).then(console.log, console.log);
   }
 
   function rq(opts, callback) {
