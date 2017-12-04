@@ -101,15 +101,10 @@ function server(options) {
     }
   }
 
-  function publishMessage(msg) {
-    console.log("publishing message: " + msg);
+  function publishMessage(book, user) {
+    console.log("publishing message");
+    var msg = "User " + user + " purchased book " + book
     var buffer = new Buffer(msg);
-    /*
-    deleteSubscriptionPromise.then(createTopicMaybe, console.log)
-        .then(createSubscriptionMaybe, console.log)
-        .then(_ => publisher.publish(buffer), console.log)
-        .then(console.log, console.log);
-    */
     publisher.publish(buffer).then(console.log, console.log);
   }
 
@@ -139,9 +134,10 @@ function server(options) {
   // purchases
   app.get('/purchases', getHelper(_ => '/purchases', options.purchases));
   app.post('/purchases', function(req, res) {
+      console.log(req)
       postHelper(_ => '/purchases', options.purchases)(req, res);
       if(usePubsub) {
-        publishMessage("purchase made");
+        publishMessage(req.body.book, req.body.user);
       }
   });
   app.get('/purchases/:purchase', getHelper(params => '/purchases/' + params.purchase, options.purchases));
