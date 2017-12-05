@@ -1,0 +1,33 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: pubsub-reader
+spec:
+  template:
+    metadata:
+      labels:
+        app: pubsub-reader
+    spec:
+      volumes:
+      - name: google-cloud-key
+        secret:
+          secretName: pubsub-reader-key
+      containers:
+      - name: subscriber
+        image: gcr.io/sc-bookstore-demo/pubsub-reader:demo
+        volumeMounts:
+        - name: google-cloud-key
+          mountPath: /var/secrets/google
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /var/secrets/google/key.json
+          ## TOPIC/SUBSCRIPTION 1
+        - name: PUBSUB_TOPIC_1
+          value: sb-48a14bbe-77f9-4f71-87bf-c504a2b466a8-topic
+        - name: PUBSUB_SUBSCRIPTION_1
+          value: sc-bookstore-demo
+          ## TOPIC/SUBSCRIPTION 2
+        - name: PUBSUB_TOPIC_2
+          value: test-topic
+        - name: PUBSUB_SUBSCRIPTION_2
+          value: test-subscription
