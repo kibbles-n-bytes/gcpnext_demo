@@ -7,10 +7,11 @@ CONFIGMAP_VALS=()
 
 for idx in ${!TOPICS[*]}; do
   topic="${TOPICS[idx]}"
-  gcloud beta pubsub subscriptions delete "bookstore-demo-${idx}"
-  gcloud beta pubsub subscriptions create "bookstore-demo-${idx}" --topic ${topic}
-  CONFIGMAP_VALS+="${topic} bookstore-demo-${idx} "
+  subscription="store-${idx}"
+  gcloud beta pubsub subscriptions delete ${subscription} &> /dev/null
+  gcloud beta pubsub subscriptions create ${subscription} --topic ${topic}
+  CONFIGMAP_VALS+="${topic} ${subscription} "
 done
 
-kubectl delete configmap pubsub-reader-config
+kubectl delete configmap pubsub-reader-config --ignore-not-found
 kubectl create configmap pubsub-reader-config --from-literal=args="${CONFIGMAP_VALS}"

@@ -21,10 +21,8 @@ def worker(t, s):
   while True:
     with pubsub.subscription.AutoAck(subscription, max_messages=10) as ack:
       for _, message in list(ack.items()):
-        print("[{}] {}/{}: {}: \"{}\"".format(datetime.datetime.now(),
-                                            t,
+        print("[{}] {}: \"{}\"".format(datetime.datetime.now(),
                                             s,
-                                            message.message_id,
                                             message.data.decode("utf-8")))
 
 
