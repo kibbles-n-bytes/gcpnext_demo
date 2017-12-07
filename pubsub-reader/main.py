@@ -6,15 +6,10 @@ prints to standard output.
 """
 
 import datetime
-import os
 import threading
+import sys
 
 from google.cloud import pubsub
-
-PUBSUB_TOPIC_1 = os.environ['PUBSUB_TOPIC_1']
-PUBSUB_SUBSCRIPTION_1 = os.environ['PUBSUB_SUBSCRIPTION_1']
-PUBSUB_TOPIC_2 = os.environ['PUBSUB_TOPIC_2']
-PUBSUB_SUBSCRIPTION_2 = os.environ['PUBSUB_SUBSCRIPTION_2']
 
 
 def worker(t, s):
@@ -34,10 +29,12 @@ def worker(t, s):
 
 
 def main():
-  t1 = threading.Thread(target=worker, args=(PUBSUB_TOPIC_1, PUBSUB_SUBSCRIPTION_1,))
-  t2 = threading.Thread(target=worker, args=(PUBSUB_TOPIC_2, PUBSUB_SUBSCRIPTION_2,))
-  t1.start()
-  t2.start()
+  args = sys.argv[1].strip(' ').split(' ')
+  for i in range(0, len(args), 2):
+    topic = args[i]
+    subscription = args[i+1]
+    t = threading.Thread(target=worker, args=(topic, subscription,))
+    t.start()
 
 if __name__ == '__main__':
   main()
