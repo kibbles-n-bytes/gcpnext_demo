@@ -32,5 +32,12 @@
 
 .purchase {
   background-color: #A6B0DD;
-  color: white
+  color: white;
+  font-weight: bold;
+  width: 95px;
+}
+
+.purchase:disabled {
+  background-color: #edeff8;
+  font-weight: normal;
 }
