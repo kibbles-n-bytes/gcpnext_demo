@@ -5,4 +5,4 @@ metadata:
   name: gcp-pubsub-instance
 spec:
   clusterServiceClassExternalName: pubsub
-  clusterServicePlanExternalName: pubsub-plan
+  clusterServicePlanExternalName: 20180223-00
