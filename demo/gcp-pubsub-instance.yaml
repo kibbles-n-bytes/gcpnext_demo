@@ -1,8 +1,0 @@
-# PUBSUB INSTANCE
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceInstance
-metadata:
-  name: gcp-pubsub-instance
-spec:
-  clusterServiceClassExternalName: pubsub
-  clusterServicePlanExternalName: 20180223-00

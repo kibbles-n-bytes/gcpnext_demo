@@ -15,7 +15,7 @@ spec:
       volumes:
       - name: google-cloud-key
         secret:
-          secretName: gcp-iam-credentials
+          secretName: pubsub
       containers:
       - name: booksfe-svc
         image: gcr.io/sc-bookstore-demo/app:demo
@@ -39,9 +39,9 @@ spec:
           - name: SVC_PURCHASES_PORT
             value: "8080"
           - name: GOOGLE_APPLICATION_CREDENTIALS
-            value: /var/secrets/google/serviceAccountPrivateKey
+            value: /var/secrets/google/privateKeyData
           - name: PUBSUB_TOPIC
             valueFrom:
               secretKeyRef:
-                name: gcp-pubsub-credentials
-                key: topic
+                name: pubsub
+                key: topicId

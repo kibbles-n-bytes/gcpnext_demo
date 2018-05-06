@@ -1,0 +1,16 @@
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: pubsub
+spec:
+  instanceRef:
+    name: pubsub
+  parameters:
+    roles:
+      - roles/pubsub.admin
+      - roles/pubsub.publisher
+      - roles/pubsub.subscriber
+    createServiceAccount: true
+    serviceAccount: pubsub
+    subscription:
+      subscriptionId: pubsub-sub
